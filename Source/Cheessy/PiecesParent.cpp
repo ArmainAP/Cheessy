@@ -58,27 +58,27 @@ void APiecesParent::BeginPlay()
 			break;
 
 		case 0:
-			Speed = 39;
+			Speed = 48;
 			break;
 
 		case 1:
-			Speed = 138;
+			Speed = 168;
 			break;
 
 		case 2:
-			Speed = 97;
+			Speed = 120;
 			break;
 
 		case 3:
-			Speed = 59;
+			Speed = 70;
 			break;
 
 		case 4:
-			Speed = 97;
+			Speed = 120;
 			break;
 
 		case 5:
-			Speed = 18;
+			Speed = 25;
 			break;
 		}
 }
@@ -134,7 +134,6 @@ void APiecesParent::Tick(float DeltaTime)
 			break;
 
 		case 3:
-			Speed = 250;
 			UpgradeOnce = false;
 			break;
 
@@ -182,8 +181,7 @@ void APiecesParent::BroadcastDamagePiece_Implementation(APiecesParent* DamagingP
 	{
 		if (DamagingPiece->PieceID == 1)
 			DistortionParticle = true;
-		Destructible->ApplyDamage(10.0f, GetActorLocation(), DamagingPiece->GetActorForwardVector(), 1.0f);
-		SetActorEnableCollision(false);
+		Destructible->ApplyDamage(10000.0f, GetActorLocation(), DamagingPiece->GetActorForwardVector(), 100.0f);
 		SetLifeSpan(1.0f);
 	}
 }

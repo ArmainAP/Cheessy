@@ -223,31 +223,67 @@ void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& Las
 	FHitResult HitResult;
 	if (Piece)
 		Piece->SetActorLocation(Speed, true, &HitResult);
-	if(HitResult.bBlockingHit)
+	if (HitResult.bBlockingHit)
 	{
 		APiecesParent* RicochetPiece = Cast<APiecesParent>(HitResult.GetActor());
 		if (RicochetPiece)
 		{
-			RicochetPiece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Piece->GetActorForwardVector().Rotation().Yaw), 0.0f));
-			if (RicochetPiece->Speed > LastDistance)
-			{
-				RicochetPiece->DistanceToTravel = RicochetPiece->GetActorLocation() + FVector(round(floor(RicochetPiece->GetActorForwardVector().X * 10) / 10), round(floor(RicochetPiece->GetActorForwardVector().Y * 10) / 10), 0.0f) * LastDistance;
-				RicochetPiece->LastDistance = FMath::FloorToInt((RicochetPiece->GetActorLocation() - RicochetPiece->DistanceToTravel).Size2D());
-			}
-			RicochetPiece->CanMovePiece = true;
 			if (Piece->Side != RicochetPiece->Side)
+			{
+				if (Piece->PieceID != 3)
+				{
+					FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
+					FVector Direction = MirrorDistance - Piece->GetActorLocation();
+					Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
+					Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
+				}
+				else if (Piece->UpgradeOnce)
+				{
+					FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
+					FVector Direction = MirrorDistance - Piece->GetActorLocation();
+					Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
+					Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
+				}
+				else
+				{
+					RicochetPiece->Immunity = false;
+					RicochetPiece->Shielded = false;
+					ServerPieceDamage(RicochetPiece, GetWorld()->GetFirstPlayerController(), Piece);
+				}
 				ServerPieceDamage(RicochetPiece, GetWorld()->GetFirstPlayerController(), Piece);
-			RicochetPiece = nullptr;
+			}
+			else
+			{
+				RicochetPiece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Piece->GetActorForwardVector().Rotation().Yaw), 0.0f));
+				
+				if (RicochetPiece->Speed > LastDistance)
+				{
+					RicochetPiece->DistanceToTravel = RicochetPiece->GetActorLocation() + FVector(round(floor(RicochetPiece->GetActorForwardVector().X * 10) / 10), round(floor(RicochetPiece->GetActorForwardVector().Y * 10) / 10), 0.0f) * LastDistance;
+					RicochetPiece->LastDistance = FMath::FloorToInt((RicochetPiece->GetActorLocation() - RicochetPiece->DistanceToTravel).Size2D());
+				}
+				else
+				{
+					RicochetPiece->DistanceToTravel = RicochetPiece->GetActorLocation() + FVector(round(floor(RicochetPiece->GetActorForwardVector().X * 10) / 10), round(floor(RicochetPiece->GetActorForwardVector().Y * 10) / 10), 0.0f) * RicochetPiece->Speed;
+					RicochetPiece->LastDistance = FMath::FloorToInt((RicochetPiece->GetActorLocation() - RicochetPiece->DistanceToTravel).Size2D());
+				}
 
+				RicochetPiece->CanMovePiece = true;
+
+				FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
+				FVector Direction = MirrorDistance - Piece->GetActorLocation();
+				Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
+				Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
+			}
+
+			RicochetPiece = nullptr;
 			Piece->SetActorEnableCollision(false);
 			DisableCollision = Piece;
 			FTimerHandle UnusedHandle;
-			GetWorldTimerManager().SetTimer(UnusedHandle, this, &AMyCharacter::EnableCollision, 0.1f, false);
+			GetWorldTimerManager().SetTimer(UnusedHandle, this, &AMyCharacter::EnableCollision, GetWorld()->GetDeltaSeconds(), false);
 		}
-
-		if (Piece->PieceID != 3 && Piece->UpgradeOnce)
+		else
 		{
-			FVector MirrorDistance = (Piece->DistanceToTravel- Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
+			FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
 			FVector Direction = MirrorDistance - Piece->GetActorLocation();
 			Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
 			Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
@@ -255,6 +291,8 @@ void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& Las
 	}
 	Piece->LastDistance = LastDistance - 1;
 }
+
+
 
 void AMyCharacter::EnableCollision()
 {
