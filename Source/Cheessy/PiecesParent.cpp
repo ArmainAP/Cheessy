@@ -222,7 +222,7 @@ void APiecesParent::Teleport_Implementation(const float x, const float y, const 
 void APiecesParent::WaveBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	APiecesParent* OverlappedPiece = Cast<APiecesParent>(OtherActor);
-	if (OverlappedPiece)
+	if (OverlappedPiece && OverlappedPiece->CapsuleComponent == OtherComp)
 	{
 		if (UpgradeOnce == false && (OverlappedPiece->UpgradeOnce && OverlappedPiece->Side == Side) && PieceID == 4)
 			OverlappedPiece->Immunity = true;
