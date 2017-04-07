@@ -6,7 +6,7 @@ public class Cheessy : ModuleRules
 {
 	public Cheessy(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "RHI" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
