@@ -41,7 +41,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	{
 		FRotator Rotation = PieceRotation();
 		ServerRotatePiece(Rotation, SelectedActor);
-		GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Blue, FString::Printf(TEXT("%f %f"), round(floor(SelectedActor->GetActorForwardVector().X * 10) / 10), round(floor(SelectedActor->GetActorForwardVector().Y * 10) / 10)));
+		GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Green, FString::Printf(TEXT("%f %f"), round(SelectedActor->GetActorForwardVector().X * 10) / 10, round(SelectedActor->GetActorForwardVector().Y * 10) / 10));
 	}
 }
 
@@ -235,14 +235,14 @@ void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& Las
 					FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
 					FVector Direction = MirrorDistance - Piece->GetActorLocation();
 					Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
-					Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
+					Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(Piece->GetActorForwardVector().X * 10) / 10, round(Piece->GetActorForwardVector().Y * 10) / 10, 0.0f) * Piece->Speed;
 				}
 				else if (Piece->UpgradeOnce)
 				{
 					FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
 					FVector Direction = MirrorDistance - Piece->GetActorLocation();
 					Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
-					Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
+					Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(Piece->GetActorForwardVector().X * 10) / 10, round(Piece->GetActorForwardVector().Y * 10) / 10, 0.0f) * Piece->Speed;
 				}
 				else
 				{
@@ -286,10 +286,10 @@ void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& Las
 			FVector MirrorDistance = (Piece->DistanceToTravel - Piece->GetActorLocation()).MirrorByVector(HitResult.ImpactNormal);
 			FVector Direction = MirrorDistance - Piece->GetActorLocation();
 			Piece->SetActorRotation(FRotator(0.0f, FRotator::ClampAxis(Direction.Rotation().Yaw), 0.0f));
-			Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(floor(Piece->GetActorForwardVector().X * 10) / 10), round(floor(Piece->GetActorForwardVector().Y * 10) / 10), 0.0f) * Piece->Speed;
+			Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(Piece->GetActorForwardVector().X * 10) / 10, round(Piece->GetActorForwardVector().Y * 10) / 10, 0.0f) * Piece->Speed;
 		}
 	}
-	Piece->LastDistance = LastDistance - 1;
+	Piece->LastDistance = LastDistance - 5;
 }
 
 

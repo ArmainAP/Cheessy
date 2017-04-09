@@ -58,27 +58,27 @@ void APiecesParent::BeginPlay()
 			break;
 
 		case 0:
-			Speed = 48;
+			Speed = 200;
 			break;
 
 		case 1:
-			Speed = 168;
+			Speed = 700;
 			break;
 
 		case 2:
-			Speed = 120;
+			Speed = 500;
 			break;
 
 		case 3:
-			Speed = 70;
+			Speed = 300;
 			break;
 
 		case 4:
-			Speed = 120;
+			Speed = 500;
 			break;
 
 		case 5:
-			Speed = 25;
+			Speed = 100;
 			break;
 		}
 }
@@ -92,13 +92,13 @@ void APiecesParent::Tick(float DeltaTime)
 	{
 		if (DistanceToTravel.Size2D() == 0.0f)
 		{
-			DistanceToTravel = GetActorLocation() + FVector(round(floor(GetActorForwardVector().X * 10) / 10), round(floor(GetActorForwardVector().Y * 10) / 10), 0.0f) * Speed;
+			DistanceToTravel = GetActorLocation() + FVector(round(GetActorForwardVector().X * 10) / 10, round(GetActorForwardVector().Y * 10) / 10, 0.0f) * Speed;
 			LastDistance = FMath::FloorToInt((GetActorLocation() - DistanceToTravel).Size2D());
 			ChangeOnce = false;
 		}
 		AMyCharacter* Pawn = Cast<AMyCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 		if(Pawn)
-			Pawn->ServerMovePiece((GetActorLocation() + (GetActorForwardVector() * (GetWorld()->GetDeltaSeconds() * 500))), LastDistance, this);
+			Pawn->ServerMovePiece(GetActorLocation() + FVector(round(GetActorForwardVector().X * 10) / 10, round(GetActorForwardVector().Y * 10) / 10, 0.0f) * 5, LastDistance, this);
 	}
 	else if (ChangeOnce)
 	{
