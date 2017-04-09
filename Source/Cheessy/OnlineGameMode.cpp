@@ -39,15 +39,11 @@ void AOnlineGameMode::BroadcastTurn_Implementation(const int& LastTurn)
 	else
 	{
 		Turn = (LastPlayerTurn == 0) ? 1 : 0;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("%d"), Turn));
 		if (MultiPlayer == false)
 		{
 			AMyPlayerController* PC = Cast<AMyPlayerController>(PlayerArray[0]);
 			PC->PlayerID = Turn;
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%d %d"), PC->PlayerID, Turn));
 		}
-		else
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("%d"), MultiPlayer));
 	}
 
 	for (int i = 0; i < PlayerArray.Num(); i++)

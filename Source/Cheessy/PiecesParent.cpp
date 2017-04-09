@@ -102,7 +102,6 @@ void APiecesParent::Tick(float DeltaTime)
 	}
 	else if (ChangeOnce)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("1337")));
 		Cast<AMyCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn())->ServerChangeTurn(2);
 		DistanceToTravel = FVector(0.0f, 0.0f, 0.0f);
 		ChangeOnce = false;
@@ -175,7 +174,7 @@ void APiecesParent::BroadcastDamagePiece_Implementation(APiecesParent* DamagingP
 	if (Shielded)
 	{
 		FTimerHandle UnusedHandle;
-		GetWorldTimerManager().SetTimer(UnusedHandle, this, &APiecesParent::UnShielded, 0.1f, false);
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &APiecesParent::UnShielded, GetWorld()->GetDeltaSeconds(), false);
 	}
 	else
 	{

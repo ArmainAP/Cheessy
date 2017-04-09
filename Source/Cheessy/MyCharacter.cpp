@@ -37,11 +37,10 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (LeftMousePressed)
+	if (LeftMousePressed && SelectedActor)
 	{
 		FRotator Rotation = PieceRotation();
 		ServerRotatePiece(Rotation, SelectedActor);
-		GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Green, FString::Printf(TEXT("%f %f"), round(SelectedActor->GetActorForwardVector().X * 10) / 10, round(SelectedActor->GetActorForwardVector().Y * 10) / 10));
 	}
 }
 
@@ -57,9 +56,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	InputComponent->BindAction("MoveCamera", IE_Pressed, this, &AMyCharacter::RightClickDown);
 	InputComponent->BindAction("MoveCamera", IE_Released, this, &AMyCharacter::RightClickUp);
+	InputComponent->BindAction("MoveCamera", IE_DoubleClick, this, &AMyCharacter::RightDoubleClick);
 
 	InputComponent->BindAction("Select", IE_Pressed, this, &AMyCharacter::LeftClickDown);
 	InputComponent->BindAction("Select", IE_Released, this, &AMyCharacter::LeftClickUp);
+	InputComponent->BindAction("Select", IE_DoubleClick, this, &AMyCharacter::LeftDoubleClick);
 }
 
 void AMyCharacter::Forward(float Value)
@@ -101,7 +102,55 @@ void AMyCharacter::RightClickUp()
 
 void AMyCharacter::RightClickDown()
 {
-	if (SelectedActor && LeftMousePressed == false)
+	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
+}
+
+void AMyCharacter::RightDoubleClick()
+{
+	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
+	FVector WorldLocation, WorldDirection;
+	PC->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
+	FHitResult Hit;
+	SetActorLocation(WorldLocation + WorldDirection * 1000, true, &Hit);
+	if (Hit.bBlockingHit)
+		SetActorLocation(Hit.ImpactPoint - GetActorForwardVector() * 100);
+}
+
+void AMyCharacter::LeftClickDown()
+{
+	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
+	if (PC->PlayerID == PC->Turn)
+	{
+		if (!SelectedActor)
+		{
+			FHitResult Hit;
+			TArray<TEnumAsByte<EObjectTypeQuery>> oTypes;
+			oTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+			PC->GetHitResultUnderCursorForObjects(oTypes, false, Hit);
+			APiecesParent* HitPiece = Cast<APiecesParent>(Hit.GetActor());
+			if (HitPiece)
+			{
+				if (((PC->PlayerID == 0) ? false : true) == HitPiece->Side)
+				{
+					SelectedActor = HitPiece;
+					LeftMousePressed = true;
+				}
+			}
+		}
+	}
+}
+
+void AMyCharacter::LeftClickUp()
+{
+	LeftMousePressed = false;
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AMyCharacter::ClearSelectedActor, 0.7f, false);
+}
+
+void AMyCharacter::LeftDoubleClick()
+{
+	LeftMousePressed = false;
+	if (SelectedActor)
 	{
 		FHitResult Hit;
 		TArray<TEnumAsByte<EObjectTypeQuery>> oTypes;
@@ -114,35 +163,12 @@ void AMyCharacter::RightClickDown()
 			SelectedActor = nullptr;
 			ServerChangeTurn(PC->PlayerID);
 		}
-		else GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
-	}
-	else  GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
-}
-
-void AMyCharacter::LeftClickDown()
-{
-	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
-	if (PC->PlayerID == PC->Turn)
-	{
-		FHitResult Hit;
-		TArray<TEnumAsByte<EObjectTypeQuery>> oTypes;
-		oTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
-		PC->GetHitResultUnderCursorForObjects(oTypes, false, Hit);
-		APiecesParent* HitPiece = Cast<APiecesParent>(Hit.GetActor());
-		if (HitPiece)
-		{
-			if (((PC->PlayerID == 0) ? false : true) == HitPiece->Side)
-			{
-					SelectedActor = HitPiece;
-					LeftMousePressed = true;
-			}
-		}
 	}
 }
 
-void AMyCharacter::LeftClickUp()
+void AMyCharacter::ClearSelectedActor()
 {
-	LeftMousePressed = false;
+	SelectedActor = nullptr;
 }
 
 //Rotate Piece

@@ -46,8 +46,11 @@ public:
 	void Left(float Value);
 	void RightClickDown();
 	void RightClickUp();
+	void RightDoubleClick();
 	void LeftClickDown();
 	void LeftClickUp();
+	void LeftDoubleClick();
+	void ClearSelectedActor();
 
 	FRotator PieceRotation();
 
