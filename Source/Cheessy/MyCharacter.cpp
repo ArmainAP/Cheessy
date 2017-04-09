@@ -289,7 +289,7 @@ void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& Las
 			Piece->DistanceToTravel = Piece->GetActorLocation() + FVector(round(Piece->GetActorForwardVector().X * 10) / 10, round(Piece->GetActorForwardVector().Y * 10) / 10, 0.0f) * Piece->Speed;
 		}
 	}
-	Piece->LastDistance = LastDistance - 5;
+	Piece->LastDistance = LastDistance - 500 * GetWorld()->GetDeltaSeconds();
 }
 
 

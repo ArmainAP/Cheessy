@@ -98,7 +98,7 @@ void APiecesParent::Tick(float DeltaTime)
 		}
 		AMyCharacter* Pawn = Cast<AMyCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 		if(Pawn)
-			Pawn->ServerMovePiece(GetActorLocation() + FVector(round(GetActorForwardVector().X * 10) / 10, round(GetActorForwardVector().Y * 10) / 10, 0.0f) * 5, LastDistance, this);
+			Pawn->ServerMovePiece(GetActorLocation() + FVector(round(GetActorForwardVector().X * 10) / 10, round(GetActorForwardVector().Y * 10) / 10, 0.0f) * 500 * DeltaTime, LastDistance, this);
 	}
 	else if (ChangeOnce)
 	{
