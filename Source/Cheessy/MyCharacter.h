@@ -17,8 +17,9 @@ public:
 	// Sets default values for this character's properties
 	AMyCharacter();
 
-	UPROPERTY()
-		bool LeftMousePressed;
+	bool RightDoubleClickPressed;
+	bool LeftMousePressed;
+	float KeyDownTime;
 
 	UPROPERTY()
 		APiecesParent* SelectedActor = nullptr;
@@ -50,7 +51,6 @@ public:
 	void LeftClickDown();
 	void LeftClickUp();
 	void LeftDoubleClick();
-	void ClearSelectedActor();
 
 	FRotator PieceRotation();
 
