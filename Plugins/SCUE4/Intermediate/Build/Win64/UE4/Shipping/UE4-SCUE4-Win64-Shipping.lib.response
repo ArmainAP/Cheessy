@@ -1,9 +1,0 @@
-/NOLOGO
-/errorReport:prompt
-/MACHINE:x64
-/SUBSYSTEM:WINDOWS
-/LTCG
-"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4\Shipping\SCUE4\Module.SCUE4.cpp.obj"
-"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4\Shipping\SCUE4\SCUE4.generated.1.cpp.obj"
-"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4\Shipping\SCUE4\SCUE4.generated.2.cpp.obj"
-/OUT:"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Binaries\Win64\UE4-SCUE4-Win64-Shipping.lib"
