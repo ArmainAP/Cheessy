@@ -1,0 +1,10 @@
+{
+	"Changelist" : 3348071,
+	"CompatibleChangelist" : 3299760,
+	"BuildId" : "061ee2a1-1708-49db-bd34-6faec8f81f95",
+	"Modules" : 
+	{
+		"SCUE4" : "UE4Editor-SCUE4.dll",
+		"SCUE4Editor" : "UE4Editor-SCUE4Editor.dll"
+	}
+}

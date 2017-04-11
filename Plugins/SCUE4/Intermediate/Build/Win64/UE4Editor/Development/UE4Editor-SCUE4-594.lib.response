@@ -1,0 +1,23 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-SCUE4-594.dll"
+/IGNORE:4221
+/NODEFAULTLIB:"LIBCMT"
+/NODEFAULTLIB:"LIBCPMT"
+/NODEFAULTLIB:"LIBCMTD"
+/NODEFAULTLIB:"LIBCPMTD"
+/NODEFAULTLIB:"MSVCRTD"
+/NODEFAULTLIB:"MSVCPRTD"
+/NODEFAULTLIB:"LIBC"
+/NODEFAULTLIB:"LIBCP"
+/NODEFAULTLIB:"LIBCD"
+/NODEFAULTLIB:"LIBCPD"
+"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4Editor\Development\SCUE4\Module.SCUE4.cpp.obj"
+"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4Editor\Development\SCUE4\SCUE4.generated.1.cpp.obj"
+"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4Editor\Development\SCUE4\SCUE4.generated.2.cpp.obj"
+"C:\Program Files (x86)\Epic Games\4.15\Engine\Intermediate\Build\Win64\UE4Editor\Development\SCUE4\PCLaunch.rc.res"
+"C:\Program Files (x86)\Epic Games\4.15\Engine\Intermediate\Build\Win64\UE4Editor\Development\ModuleVersionResource.rc.inl.res"
+/OUT:"C:\Users\silly\Desktop\InfoEducatie\Cheessy Working Copy\Plugins\SCUE4\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-SCUE4-594.lib"
