@@ -84,17 +84,37 @@ void AMyCharacter::Strafe(float Value)
 
 void AMyCharacter::Up(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f) && (GetWorld()->GetFirstPlayerController()->bShowMouseCursor == false))
+	if (PLATFORM_WINDOWS || PLATFORM_LINUX || PLATFORM_MAC)
 	{
-		AddControllerPitchInput(Value);
+		if ((Controller != NULL) && (Value != 0.0f) && (GetWorld()->GetFirstPlayerController()->bShowMouseCursor == false))
+		{
+			AddControllerPitchInput(Value);
+		}
+	}
+	else
+	{
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			AddControllerPitchInput(Value * 45.0f * GetWorld()->GetDeltaSeconds());
+		}
 	}
 }
 
 void AMyCharacter::Left(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f) && (GetWorld()->GetFirstPlayerController()->bShowMouseCursor == false))
+	if (PLATFORM_WINDOWS || PLATFORM_LINUX || PLATFORM_MAC)
 	{
-		AddControllerYawInput(Value);
+		if ((Controller != NULL) && (Value != 0.0f) && (GetWorld()->GetFirstPlayerController()->bShowMouseCursor == false))
+		{
+			AddControllerYawInput(Value);
+		}
+	}
+	else
+	{
+		if ((Controller != NULL) && (Value != 0.0f))
+		{
+			AddControllerYawInput(Value * 45.0f * GetWorld()->GetDeltaSeconds());
+		}
 	}
 }
 
