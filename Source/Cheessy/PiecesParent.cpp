@@ -22,7 +22,7 @@ APiecesParent::APiecesParent()
 	RotationComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RotationComponent"));
 	RotationComponent->SetupAttachment(CapsuleComponent);
 
-	Destructible = CreateDefaultSubobject<UDestructibleComponent>(TEXT("Mesh"));
+	Destructible = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Destructible->SetIsReplicated(true);
 	Destructible->SetWorldScale3D(FVector(10.0f, 10.0f, 10.0f));
 	Destructible->SetupAttachment(CapsuleComponent);
@@ -180,8 +180,7 @@ void APiecesParent::BroadcastDamagePiece_Implementation(APiecesParent* DamagingP
 	{
 		if (DamagingPiece->PieceID == 1)
 			DistortionParticle = true;
-		Destructible->ApplyDamage(10000.0f, GetActorLocation(), DamagingPiece->GetActorForwardVector(), 100.0f);
-		SetLifeSpan(1.0f);
+		DestroyParticle = true;
 	}
 }
 

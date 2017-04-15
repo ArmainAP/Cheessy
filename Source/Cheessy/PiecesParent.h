@@ -39,7 +39,7 @@ public:
 	UCapsuleComponent* CapsuleComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UDestructibleComponent* Destructible;
+	UStaticMeshComponent* Destructible;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* RotationComponent;
@@ -63,6 +63,9 @@ public:
 	bool UpgradeOnce = true;
 
 	bool ChangeOnce;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool DestroyParticle;
 
 protected:
 	// Called when the game starts or when spawned
