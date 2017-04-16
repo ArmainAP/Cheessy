@@ -67,6 +67,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool DestroyParticle;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool RefreshOutline;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor OutlineColor;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

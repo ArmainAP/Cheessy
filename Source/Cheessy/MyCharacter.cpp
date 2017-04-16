@@ -150,7 +150,10 @@ void AMyCharacter::LeftClickDown()
 		FHitResult Hit;
 		TArray<TEnumAsByte<EObjectTypeQuery>> oTypes;
 		oTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
-		PC->GetHitResultUnderCursorForObjects(oTypes, false, Hit);
+		if (PLATFORM_WINDOWS || PLATFORM_LINUX || PLATFORM_MAC)
+			PC->GetHitResultUnderCursorForObjects(oTypes, false, Hit);
+		else
+			PC->GetHitResultUnderCursorForObjects(oTypes, false, Hit);
 		APiecesParent* HitPiece = Cast<APiecesParent>(Hit.GetActor());
 		if (HitPiece)
 		{

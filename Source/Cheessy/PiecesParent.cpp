@@ -151,16 +151,26 @@ void APiecesParent::Tick(float DeltaTime)
 	}
 
 	if (!UpgradeOnce)
-		Destructible->SetCustomDepthStencilValue(3);
+	{
+		OutlineColor = FLinearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		RefreshOutline = true;
+	}
 	else if (Immunity)
 	{
-		Destructible->SetCustomDepthStencilValue(2);
+		OutlineColor = FLinearColor(0.0f, 0.0f, 1.0f, 1.0f);
+		RefreshOutline = true;
 		Shielded = true;
 	}
 	else if (Shielded)
-		Destructible->SetCustomDepthStencilValue(1);
+	{
+		OutlineColor = FLinearColor(0.0f, 1.0f, 1.0f, 1.0f);
+		RefreshOutline = true;
+	}
 	else
-		Destructible->SetCustomDepthStencilValue(0);
+	{
+		OutlineColor = FLinearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		RefreshOutline = true;
+	}
 }
 
 float APiecesParent::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -181,6 +191,7 @@ void APiecesParent::BroadcastDamagePiece_Implementation(APiecesParent* DamagingP
 		if (DamagingPiece->PieceID == 1)
 			DistortionParticle = true;
 		DestroyParticle = true;
+		SetLifeSpan(0.5f);
 	}
 }
 
