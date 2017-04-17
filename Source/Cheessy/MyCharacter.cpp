@@ -42,7 +42,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	if (LeftMousePressed && SelectedActor)
 	{
 		KeyDownTime += DeltaTime;
-		if(KeyDownTime > 0.1f)
+		if(KeyDownTime > 0.2f)
 			ServerRotatePiece(PieceRotation(), SelectedActor);
 	}
 }
@@ -131,14 +131,6 @@ void AMyCharacter::RightClickDown()
 
 void AMyCharacter::RightDoubleClick()
 {
-	/*AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
-	FVector WorldLocation, WorldDirection;
-	PC->DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
-	FHitResult Hit;
-	SetActorLocation(WorldLocation + GetActorForwardVector() * 1000, true, &Hit);
-	if (Hit.bBlockingHit)
-		SetActorLocation(Hit.ImpactPoint - GetActorForwardVector() * 100);
-	AddControllerYawInput(90.0f);*/
 	RightDoubleClickPressed = true;
 }
 
