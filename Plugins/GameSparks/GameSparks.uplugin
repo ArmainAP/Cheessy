@@ -1,0 +1,52 @@
+{
+	"FileVersion" : 3,
+	"Version" : 1,
+	"VersionName" : "0.1",
+	"FriendlyName" : "GameSparksSDK",
+	"Description" : "GameSparks Unreal Engine 4 SDK",
+	"Category" : "GameSparks.GameSparksSDK",
+	"CreatedBy" : "GameSparks Ltd, 2016",
+	"CreatedByURL" : "http://www.gamesparks.com",
+	"DocsURL" : "",
+	"MarketplaceURL" : "com.epicgames.launcher://ue/marketplace/content/0bb7b72905c64c7d86c4c430a42bc9c1",
+	"SupportURL" : "",
+	"CanContainContent" : true,
+	"IsBetaVersion" : false,
+	"Installed" : true,
+	"RequiresBuildPlatform" : false,
+	"Modules" :
+	[
+		{
+			"Name" : "GameSparks",
+			"Type" : "Runtime",
+			"LoadingPhase" : "PreDefault",
+			"WhitelistPlatforms" :
+			[
+				"Win32",
+				"Win64",
+				"Mac",
+				"Android",
+				"IOS",
+				"PS4",
+				"XboxOne",
+				"Linux"
+			]
+		},
+		{
+			"Name" : "OnlineSubsystemGameSparks",
+			"Type" : "Runtime",
+			"LoadingPhase" : "Default",
+			"WhitelistPlatforms" :
+			[
+				"Win32",
+				"Win64",
+				"Mac",
+				"Android",
+				"IOS",
+				"PS4",
+				"XboxOne",
+				"Linux"
+			]
+		}
+	]
+}
