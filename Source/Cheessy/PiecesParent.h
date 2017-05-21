@@ -65,9 +65,6 @@ public:
 	bool ChangeOnce;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool DestroyParticle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool RefreshOutline;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

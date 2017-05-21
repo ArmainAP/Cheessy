@@ -21,4 +21,7 @@ public:
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Turn Based")
 	int Turn;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool ForceWin;
 };

@@ -4,17 +4,18 @@
 #include "UnrealNetwork.h"
 #include "MyPlayerController.h"
 
+//Constructor pentru AMyPlayerController
 AMyPlayerController::AMyPlayerController()
 {
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 }
 
+//Replica variabilele ce detin date deste ID-ul si randul jucatorului.
 void AMyPlayerController::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	// Replicate to everyone
 	DOREPLIFETIME(AMyPlayerController, PlayerID);
 	DOREPLIFETIME(AMyPlayerController, Turn);
 }

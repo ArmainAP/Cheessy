@@ -15,8 +15,10 @@ class CHEESSY_API AOnlineGameMode : public AGameMode
 	
 private:
 	virtual void PostLogin(APlayerController * NewPlayer) override;
+	virtual void Logout(AController * ExitPlayer) override;
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<APlayerController*> PlayerArray;
 
 	UPROPERTY(Replicated)
@@ -30,6 +32,8 @@ public:
 
 	UPROPERTY(Replicated)
 		bool MultiPlayer;
+
+	int DCount;
 
 	UFUNCTION(NetMulticast, Reliable)
 	void BroadcastTurn(const int& LastTurn); //0 player 1, 1 player 2, 2 server

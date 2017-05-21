@@ -7,10 +7,9 @@
 #include "MyCharacter.h"
 #include "OnlineGameMode.h"
 
-// Sets default values
+//Constructor pentru AMyCharacter
 AMyCharacter::AMyCharacter()
-{	
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+{
 	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationPitch = true;
@@ -25,14 +24,7 @@ AMyCharacter::AMyCharacter()
 	Camera->bUsePawnControlRotation = true;
 }
 
-// Called when the game starts or when spawned
-void AMyCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-
-}
-
-// Called every frame
+//Functia este apelata la fiecare frame
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -47,7 +39,7 @@ void AMyCharacter::Tick(float DeltaTime)
 	}
 }
 
-// Called to bind functionality to input
+//Functia seteaza tastele
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -66,6 +58,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	InputComponent->BindAction("Select", IE_DoubleClick, this, &AMyCharacter::LeftDoubleClick);
 }
 
+//Functie apelata la apasarea tastei 'W' sau 'S'
 void AMyCharacter::Forward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -74,6 +67,7 @@ void AMyCharacter::Forward(float Value)
 	}
 }
 
+//Functie apelata la apasarea tastei 'A' sau 'D'
 void AMyCharacter::Strafe(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -82,6 +76,7 @@ void AMyCharacter::Strafe(float Value)
 	}
 } 
 
+//Functie apelata la schimbarea coordonatei X a mouse-ului
 void AMyCharacter::Up(float Value)
 {
 	if (PLATFORM_WINDOWS || PLATFORM_LINUX || PLATFORM_MAC)
@@ -100,6 +95,7 @@ void AMyCharacter::Up(float Value)
 	}
 }
 
+//Functie apelata la schimbarea coordonatei Y a mouse-ului
 void AMyCharacter::Left(float Value)
 {
 	if (PLATFORM_WINDOWS || PLATFORM_LINUX || PLATFORM_MAC)
@@ -118,22 +114,26 @@ void AMyCharacter::Left(float Value)
 	}
 }
 
+//Functie apelata dupa oprirea apasarii click dreapta mouse
 void AMyCharacter::RightClickUp()
 {
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
 	RightDoubleClickPressed = false;
 }
 
+//Functie apelata dupa apasarea click dreapta mouse
 void AMyCharacter::RightClickDown()
 {
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = false;
 }
 
+//Functie apelata dupa apasarea dubla a click dreapta mouse
 void AMyCharacter::RightDoubleClick()
 {
 	RightDoubleClickPressed = true;
 }
 
+//Functie apelata dupa apasarea click stanga mouse
 void AMyCharacter::LeftClickDown()
 {
 	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
@@ -159,6 +159,7 @@ void AMyCharacter::LeftClickDown()
 	}
 }
 
+//Functie apelata dupa oprirea apasarii click stanga mouse
 void AMyCharacter::LeftClickUp()
 {
 	LeftMousePressed = false;
@@ -183,8 +184,8 @@ void AMyCharacter::LeftDoubleClick()
 	}
 }
 
-//Rotate Piece
-FRotator AMyCharacter::PieceRotation() //Code Snippet from https://answers.unrealengine.com/questions/20858/set-collision-settings-for-brushes.html
+//Returneaza rotatia indreptata spre pozitia mouse-ului proiectata in spatiu 3Dimensional
+FRotator AMyCharacter::PieceRotation()
 {
 	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
 	FVector PlaneNormal = FVector(0.0f, 0.0f, 1.0f);
@@ -202,39 +203,44 @@ FRotator AMyCharacter::PieceRotation() //Code Snippet from https://answers.unrea
 	return Rotation;
 }
 
+//Functia valideaza AMyCharacter::ServerRotatePiece_Implementation pe server
 bool AMyCharacter::ServerRotatePiece_Validate(const FRotator& rot, APiecesParent* Piece)
 {
 	return true;
 }
 
+//Functia transmite rotatia catre fiecare client
 void AMyCharacter::ServerRotatePiece_Implementation(const FRotator& rot, APiecesParent* Piece)
 {
 	BroadcastRotation(rot, Piece);
 }
 
+//Aplica rotatia primita de la server
 void AMyCharacter::BroadcastRotation_Implementation(const FRotator rot, APiecesParent* Piece)
 {
 	Piece->SetActorRotation(rot);
 }
 
-//Change Turn
+//Functia valideaza AMyCharacter::ServerChangeTurn_Implementation pe server
 bool AMyCharacter::ServerChangeTurn_Validate(const int& LastTurn)
 {
 	return true;
 }
 
+//Functia transmite schimbarea randului intre jucatori
 void AMyCharacter::ServerChangeTurn_Implementation(const int& LastTurn)
 {
 	AOnlineGameMode* GM = Cast<AOnlineGameMode>(GetWorld()->GetAuthGameMode());
 	GM->BroadcastTurn(LastTurn);
 }
 
-//Move Piece
+//Functia valideaza AMyCharacter::ServerMovePiece_Implementation
 bool AMyCharacter::ServerMovePiece_Validate(const FVector& Speed, const int& LastDistance, APiecesParent* Piece)
 {
 	return true;
 }
 
+//Functia transmite deplasarea piesei catre client
 void AMyCharacter::ServerMovePiece_Implementation(const FVector& Speed, const int& LastDistance, APiecesParent* Piece)
 {
 	if (LastDistance > 0)
@@ -246,6 +252,7 @@ void AMyCharacter::ServerMovePiece_Implementation(const FVector& Speed, const in
 	}
 }
 
+//Functia este apelata la oprirea deplasarii pieselor
 void AMyCharacter::StopMovePiece_Implementation(APiecesParent* Piece)
 {
 	if (Piece)
@@ -256,6 +263,7 @@ void AMyCharacter::StopMovePiece_Implementation(APiecesParent* Piece)
 	}
 }
 
+//Functia replica deplasarea pieselor pe fiecare client
 void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& LastDistance, APiecesParent* Piece)
 {
 	FHitResult HitResult;
@@ -330,20 +338,20 @@ void AMyCharacter::MovePiece_Implementation(const FVector& Speed, const int& Las
 	Piece->LastDistance = LastDistance - 500 * GetWorld()->GetDeltaSeconds();
 }
 
-
-
+//Functia reactiveaza coliziunea
 void AMyCharacter::EnableCollision()
 {
 	if (DisableCollision)
 		DisableCollision->SetActorEnableCollision(true);
 }
 
-//Collision
+//Functia valideaza AMyCharacter::ServerPieceDamage_Implementaton pe server
 bool AMyCharacter::ServerPieceDamage_Validate(APiecesParent* PieceToDamage, APlayerController* PlayerController, APiecesParent* DamageCauser)
 {
 	return true;
 }
 
+//Functia transmite daunele pieselor in cazul coliziunii pieselor de culori diferite care nu au scut catre client
 void AMyCharacter::ServerPieceDamage_Implementation(APiecesParent* PieceToDamage, APlayerController* PlayerController, APiecesParent* DamageCauser)
 {
 	UGameplayStatics::ApplyDamage(PieceToDamage, 1.0f, PlayerController, DamageCauser, TSubclassOf<UDamageType>(UDamageType::StaticClass()));
@@ -351,6 +359,7 @@ void AMyCharacter::ServerPieceDamage_Implementation(APiecesParent* PieceToDamage
 		BroadcastUpgradePiece(DamageCauser);
 }
 
+//Functia replica imbunatarirea pieselor catre client
 void AMyCharacter::BroadcastUpgradePiece_Implementation(APiecesParent* Piece)
 {
 	Piece->Upgraded = true;

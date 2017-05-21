@@ -3,14 +3,17 @@
 #include "Cheessy.h"
 #include "MainMenuGameMode.h"
 
+//Initializarea variabilelor static
 FString AMainMenuGameMode::displayname = "";
 int AMainMenuGameMode::Elo = 0;
 
+//Constructor pentru clasa
 AMainMenuGameMode::AMainMenuGameMode()
 {
 	GameSparksComponent = CreateDefaultSubobject<UGameSparksComponent>(TEXT("GameSparks Component"));
 }
 
+//Functia este apelata la inceputul nivelului
 void AMainMenuGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -23,6 +26,7 @@ void AMainMenuGameMode::BeginPlay()
 	}
 }
 
+//Functia este apelata la incheierea sesiunii
 void AMainMenuGameMode::EndPlay(EEndPlayReason::Type reason)
 {
 	Super::EndPlay(reason);
@@ -30,6 +34,7 @@ void AMainMenuGameMode::EndPlay(EEndPlayReason::Type reason)
 		GameSparksComponent->Disconnect();
 }
 
+//Functia trimite o cerere de autentificare catre platforma GameSparks
 void AMainMenuGameMode::Authenticator(FString username, FString password)
 {
 	if (username.IsEmpty() || password.IsEmpty())
@@ -44,6 +49,7 @@ void AMainMenuGameMode::Authenticator(FString username, FString password)
 	req.Send(LoginRequest_Response);
 }
 
+//Functie apelata dupa raspunsul la cererea de autentificare din partea platformei GameSparks
 void AMainMenuGameMode::LoginRequest_Response(GameSparks::Core::GS & gs, const GameSparks::Api::Responses::AuthenticationResponse & resp)
 {
 	if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
@@ -53,18 +59,20 @@ void AMainMenuGameMode::LoginRequest_Response(GameSparks::Core::GS & gs, const G
 	}
 }
 
+//Functie apelata dupa autentificarea reusita. Creaza o cerere pentru detaliile contului autentificat.
 void AMainMenuGameMode::LoginSuccessDetails_Response(GameSparks::Core::GS & gs, const GameSparks::Api::Responses::AccountDetailsResponse & resp)
 {
 	if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
 	{
-		GameSparks::Core::GS& gs = UGameSparksModule::GetModulePtr()->GetGSInstance();
-		GameSparks::Api::Requests::AccountDetailsRequest req(gs);
+		GameSparks::Core::GS& gss = UGameSparksModule::GetModulePtr()->GetGSInstance();
+		GameSparks::Api::Requests::AccountDetailsRequest req(gss);
 		req.Send(AccountDetailsRequest_Response);
 	}
 
 }
 
-void AMainMenuGameMode::Register(FString username, FString password, FString displayname)
+//Functia realizeaza inregistrarea jucatorului pe platforma GameSparks si in baza de date NoSQL
+void AMainMenuGameMode::Register(FString username, FString password, FString Registerdisplayname)
 {
 	if (username.IsEmpty() || password.IsEmpty())
 		return;
@@ -74,19 +82,21 @@ void AMainMenuGameMode::Register(FString username, FString password, FString dis
 
 	req.SetUserName(std::string(TCHAR_TO_UTF8(*username)));
 	req.SetPassword(std::string(TCHAR_TO_UTF8(*password)));
-	req.SetDisplayName(std::string(TCHAR_TO_UTF8(*displayname)));
+	req.SetDisplayName(std::string(TCHAR_TO_UTF8(*Registerdisplayname)));
 
 	req.Send(RegistrationRequest_Response);
 
 	Authenticator(username, password);
 }
 
+//Functia este apelata dupa cererea de inregistrare si indica daca inregistrarea a fost reusita sau nu
 void AMainMenuGameMode::RegistrationRequest_Response(GameSparks::Core::GS & gs, const GameSparks::Api::Responses::RegistrationResponse & resp)
 {
-	if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, resp.GetJSONString().c_str());
+	/*if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, resp.GetJSONString().c_str());*/
 }
 
+//Returneaza detaliile contului autentificat. Salveaza numele si elo-ul jucatorul in client side
 void AMainMenuGameMode::AccountDetailsRequest_Response(GameSparks::Core::GS & gs, const GameSparks::Api::Responses::AccountDetailsResponse & resp)
 {
 	if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
@@ -96,15 +106,31 @@ void AMainMenuGameMode::AccountDetailsRequest_Response(GameSparks::Core::GS & gs
 	}
 }
 
+void AMainMenuGameMode::ChangeDisplayName(FString DisplayName)
+{
+	if (DisplayName.IsEmpty())
+		return;
+
+	GameSparks::Core::GS& gs = UGameSparksModule::GetModulePtr()->GetGSInstance();
+	GameSparks::Api::Requests::ChangeUserDetailsRequest req(gs);
+
+	req.SetDisplayName(std::string(TCHAR_TO_UTF8(*DisplayName)));
+	req.Send(ChangeUserDetailRequest_Response);
+}
+
+void AMainMenuGameMode::ChangeUserDetailRequest_Response(GameSparks::Core::GS & gs, const GameSparks::Api::Responses::ChangeUserDetailsResponse & resp)
+{
+	/*if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, resp.GetJSONString().c_str());*/
+}
+
+//Functia este apelata dupa conectarea la platforma GameSpark si indica daca corectarea a fost reusita
 void AMainMenuGameMode::OnGameSparksAvailable(bool available)
 {
 	gsavailable = available;
-	if (available)
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("Available"));
-	else
-		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("Not Available"));
 }
 
+//Returneaza adresa IP locala
 FString AMainMenuGameMode::LocalIP()
 {
 	bool AppenPort = false;
@@ -112,6 +138,7 @@ FString AMainMenuGameMode::LocalIP()
 	return LocalAddress->ToString(false);
 }
 
+//Realizeaza o cerere HTTP catre http://api.ipify.org/
 bool AMainMenuGameMode::ExternalIP_SentRequest()
 {
 	FHttpModule* Http = &FHttpModule::Get();
@@ -131,10 +158,46 @@ bool AMainMenuGameMode::ExternalIP_SentRequest()
 	return true;
 }
 
+//Returneaza adresa IP externala/publica indicata de http://api.ipify.org/
 void AMainMenuGameMode::HTTPOnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	if (bWasSuccessful)
 		this->ExternalIP_DataReceived(Response->GetContentAsString());
 	else
 		this->ExternalIP_DataReceived(FString("HTTPOnResponseReceived >>> Connection Error"));
+}
+
+void AMainMenuGameMode::CheckIfServerOnline(FString ServerPublicIP, FString ServerPort)
+{
+	PingResult.BindUObject(this, &AMainMenuGameMode::OnServerCheckFinished);
+	const FString Address = ServerPublicIP + ":" + ServerPort;
+	GEngine->AddOnScreenDebugMessage(-1, 50.0f, FColor::MakeRandomColor(), Address);
+	FUDPPing::UDPEcho(Address, 5.f, PingResult);
+}
+
+void AMainMenuGameMode::OnServerCheckFinished(FIcmpEchoResult Result)
+{
+	PingResult.Unbind();
+	PingStatus = "PingFailed";
+	switch (Result.Status)
+	{
+	case EIcmpResponseStatus::Success:
+		PingStatus = "Success";
+		break;
+	case EIcmpResponseStatus::Timeout:
+		PingStatus = "Timeout";
+		break;
+	case EIcmpResponseStatus::Unreachable:
+		PingStatus = "Unreachable";
+		break;
+	case EIcmpResponseStatus::Unresolvable:
+		PingStatus = "Unresolvable";
+		break;
+	case EIcmpResponseStatus::InternalError:
+		PingStatus = "Internal Error";
+		break;
+	default:
+		PingStatus = "Unknown Error";
+		break;
+	}
 }

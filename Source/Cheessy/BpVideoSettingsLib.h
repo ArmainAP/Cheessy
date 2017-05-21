@@ -6,7 +6,7 @@
 #include "BpVideoSettingsLib.generated.h"
 
 /**
- * 
+ * Aceasta clasa este o librarie statica pentru sistemul de Visual Scripting utilizat de Unreal Engine.
  */
 UCLASS()
 class CHEESSY_API UBpVideoSettingsLib : public UBlueprintFunctionLibrary
@@ -14,53 +14,53 @@ class CHEESSY_API UBpVideoSettingsLib : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	// Get a list of screen resolutions supported on this machine
+	// Citeste rezolutiile suportate de adaptorul video
 	UFUNCTION(BlueprintPure, Category = "Video Settings")
 		static bool GetSupportedScreenResolutions(TArray<FString>& Resolutions);
 
-	// Get currently set screen resolution
+	// Citeste rezolutia curenta.
 	UFUNCTION(BlueprintPure, Category = "Video Settings")
 		static FString GetScreenResolution();
 
-	// Check whether or not we are currently running in fullscreen mode
+	// Verifica daca aplicatia este in fullscreen
 	UFUNCTION(BlueprintPure, Category = "Video Settings")
 		static bool IsInFullscreen();
 
-	// Set the desired screen resolution (does not change it yet)
+	// Seteaza rezolutia dorita (Dar nu o schimba)
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool SetScreenResolution(const int32 Width, const int32 Height, const bool Fullscreen);
 
-	// Change the current screen resolution
+	// Schimba in rezolutia dorita
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool ChangeScreenResolution(const int32 Width, const int32 Height, const bool Fullscreen);
 
-	// Get the current video quality settings
+	// Citeste setarile de calitate video
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool GetVideoQualitySettings(int32& AntiAliasing, int32& Effects, int32& PostProcess, int32& Resolution, int32& Shadow, int32& Texture, int32& ViewDistance);
 
-	// Set the quality settings (not applied nor saved yet)
+	// Seteaza setarile de calitate video
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool SetVideoQualitySettings(const int32 AntiAliasing = 3, const int32 Effects = 3, const int32 PostProcess = 3,
 			const int32 Resolution = 100, const int32 Shadow = 3, const int32 Texture = 3, const int32 ViewDistance = 3);
 
-	// Check whether or not we have vertical sync enabled
+	// Verifica daca aplicatia are VSync activat
 	UFUNCTION(BlueprintPure, Category = "Video Settings")
 		static bool IsVSyncEnabled();
 
-	// Set the vertical sync flag
+	// Seteaza VSync
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool SetVSyncEnabled(const bool VSync);
 
-	// Confirm and save current video mode (resolution and fullscreen/windowed) as well as quality settings
+	// Confirma si seteaza rezolutia si modul fullscreen/windowed
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool SaveVideoModeAndQuality();
 
-	// Revert to original video settings
+	// Reseteaza setarile la cele initiale
 	UFUNCTION(BlueprintCallable, Category = "Video Settings")
 		static bool RevertVideoMode();
 
 private:
-	// Try to get the GameUserSettings object from the engine
+	// Returneaza un pointer catre obiectul responsabil setarilor aplicatie
 	static UGameUserSettings* GetGameUserSettings();
 
 };

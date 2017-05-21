@@ -6,16 +6,14 @@
 #include "OnlineGameMode.h"
 #include "MyCharacter.h"
 
-// Sets default values
+//Constructor pentru APiecesParent
 APiecesParent::APiecesParent()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
 	bReplicateMovement = true;
 
-	//Components
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 	CapsuleComponent->SetIsReplicated(true);
 
@@ -35,15 +33,15 @@ APiecesParent::APiecesParent()
 	WaveCollision->SetupAttachment(CapsuleComponent);
 }
 
+//Replica variabila care detine date despre starea de miscare a piesei
 void APiecesParent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	// Replicate to everyone
 	DOREPLIFETIME(APiecesParent, CanMovePiece);
 }
 
-// Called when the game starts or when spawned
+//Apelata la inceperea jocului
 void APiecesParent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -51,7 +49,7 @@ void APiecesParent::BeginPlay()
 	WaveCollision->OnComponentBeginOverlap.AddDynamic(this, &APiecesParent::WaveBeginOverlap);
 	WaveCollision->OnComponentEndOverlap.AddDynamic(this, &APiecesParent::WaveEndOverlap);
 
-		//King 0, Queen 1, Bishop 2, Horse 3, Rook 4, Pawn 5
+		//ID-ul pieselor: Rege = 0, Regina = 1, Nebun = 2, Cal = 3, Tura = 4, Pion = 5
 		switch (PieceID)
 		{
 		default:
@@ -83,7 +81,7 @@ void APiecesParent::BeginPlay()
 		}
 }
 
-// Called every frame
+//Functia este apelata la fiecare frame
 void APiecesParent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -173,12 +171,14 @@ void APiecesParent::Tick(float DeltaTime)
 	}
 }
 
+//Returneaza daunele primite
 float APiecesParent::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	BroadcastDamagePiece(Cast<APiecesParent>(DamageCauser));
 	return Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 }
 
+//Replica daunele primite la fiecare client
 void APiecesParent::BroadcastDamagePiece_Implementation(APiecesParent* DamagingPiece)
 {
 	if (Shielded)
@@ -190,22 +190,23 @@ void APiecesParent::BroadcastDamagePiece_Implementation(APiecesParent* DamagingP
 	{
 		if (DamagingPiece->PieceID == 1)
 			DistortionParticle = true;
-		DestroyParticle = true;
-		SetLifeSpan(0.5f);
+		SetLifeSpan(0.1f);
 	}
 }
 
+//Functia elimina scutul pieselor
 void APiecesParent::UnShielded()
 {
 	Shielded = false;
 }
 
-//Queen
+//Functia valideaza APiecesParent::ServerTeleport_Implementation pe server
 bool APiecesParent::ServerTeleport_Validate()
 {
 	return true;
 }
 
+//Functia genereaza o pozitie noua neocupata de alta piesa
 void APiecesParent::ServerTeleport_Implementation()
 {
 	FHitResult TeleportHit;
@@ -219,6 +220,7 @@ void APiecesParent::ServerTeleport_Implementation()
 		Teleport(x, y, z);
 }
 
+//Functia muta regina pe noua pozitie generata
 void APiecesParent::Teleport_Implementation(const float x, const float y, const float z)
 {
 	SetActorLocation(FVector(x, y, z));
@@ -227,7 +229,7 @@ void APiecesParent::Teleport_Implementation(const float x, const float y, const 
 	TeleportParticle = true;
 }
 
-//Rook and Bishop
+//Functia detecteaza coliziunea abilitatii Nebunului si Turei cu alte piese
 void APiecesParent::WaveBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	APiecesParent* OverlappedPiece = Cast<APiecesParent>(OtherActor);
@@ -246,6 +248,7 @@ void APiecesParent::WaveBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor
 	}
 }
 
+//Functia detecteaza iesirea din coliziune cu o alta piesa a abilitatii Nebunului si Turei
 void APiecesParent::WaveEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	APiecesParent* OverlappedPiece = Cast<APiecesParent>(OtherActor);

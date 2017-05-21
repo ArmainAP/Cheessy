@@ -3,13 +3,12 @@
 #include "Cheessy.h"
 #include "BpVideoSettingsLib.h"
 
-// Get a list of screen resolutions supported by video adapter
-// NOTE: This function needs "RHI" to be added to <Project>.Build.cs file!
+// Citeste rezolutiile suportate de adaptorul video
 bool UBpVideoSettingsLib::GetSupportedScreenResolutions(TArray<FString>& Resolutions)
 {
 	FScreenResolutionArray ResolutionsArray;
 
-	if (RHIGetAvailableResolutions(ResolutionsArray, true))  // needs the "RHI" dependency
+	if (RHIGetAvailableResolutions(ResolutionsArray, true))
 	{
 		for (const FScreenResolutionRHI& Resolution : ResolutionsArray)
 		{
@@ -20,11 +19,11 @@ bool UBpVideoSettingsLib::GetSupportedScreenResolutions(TArray<FString>& Resolut
 		return true;
 	}
 
-	return false;  // failed to obtain screen resolutions
+	return false;
 }
 
 
-// Get currently set screen resolution
+// Citeste rezolutia curenta.
 FString UBpVideoSettingsLib::GetScreenResolution()
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -38,7 +37,7 @@ FString UBpVideoSettingsLib::GetScreenResolution()
 }
 
 
-// Check whether or not we are currently running in fullscreen mode
+// Verifica daca aplicatia este in fullscreen
 bool UBpVideoSettingsLib::IsInFullscreen()
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -51,7 +50,7 @@ bool UBpVideoSettingsLib::IsInFullscreen()
 }
 
 
-// Set the desired screen resolution (does not change it yet)
+// Seteaza rezolutia dorita (Dar nu o schimba)
 bool UBpVideoSettingsLib::SetScreenResolution(const int32 Width, const int32 Height, const bool Fullscreen)
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -66,7 +65,7 @@ bool UBpVideoSettingsLib::SetScreenResolution(const int32 Width, const int32 Hei
 }
 
 
-// Change the current screen resolution
+// Schimba in rezolutia dorita
 bool UBpVideoSettingsLib::ChangeScreenResolution(const int32 Width, const int32 Height, const bool Fullscreen)
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -81,7 +80,7 @@ bool UBpVideoSettingsLib::ChangeScreenResolution(const int32 Width, const int32 
 }
 
 
-// Get the current video quality settings
+// Citeste setarile de calitate video
 bool UBpVideoSettingsLib::GetVideoQualitySettings(int32& AntiAliasing, int32& Effects, int32& PostProcess,
 	int32& Resolution, int32& Shadow, int32& Texture, int32& ViewDistance)
 {
@@ -102,7 +101,7 @@ bool UBpVideoSettingsLib::GetVideoQualitySettings(int32& AntiAliasing, int32& Ef
 }
 
 
-// Set the quality settings (not applied nor saved yet)
+// Seteaza setarile de calitate video
 bool UBpVideoSettingsLib::SetVideoQualitySettings(const int32 AntiAliasing, const int32 Effects, const int32 PostProcess,
 	const int32 Resolution, const int32 Shadow, const int32 Texture, const int32 ViewDistance)
 {
@@ -123,7 +122,7 @@ bool UBpVideoSettingsLib::SetVideoQualitySettings(const int32 AntiAliasing, cons
 }
 
 
-// Check whether or not we have vertical sync enabled
+// Verifica daca aplicatia are VSync activat
 bool UBpVideoSettingsLib::IsVSyncEnabled()
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -136,7 +135,7 @@ bool UBpVideoSettingsLib::IsVSyncEnabled()
 }
 
 
-// Set the vertical sync flag
+// Seteaza VSync
 bool UBpVideoSettingsLib::SetVSyncEnabled(const bool VSync)
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -150,7 +149,7 @@ bool UBpVideoSettingsLib::SetVSyncEnabled(const bool VSync)
 }
 
 
-// Confirm and save current video mode (resolution and fullscreen/windowed)
+// Confirma si seteaza rezolutia si modul fullscreen/windowed
 bool UBpVideoSettingsLib::SaveVideoModeAndQuality()
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -166,7 +165,7 @@ bool UBpVideoSettingsLib::SaveVideoModeAndQuality()
 }
 
 
-// Revert to original video settings
+// Reseteaza setarile la cele initiale
 bool UBpVideoSettingsLib::RevertVideoMode()
 {
 	UGameUserSettings* Settings = GetGameUserSettings();
@@ -179,10 +178,7 @@ bool UBpVideoSettingsLib::RevertVideoMode()
 	return true;
 }
 
-
-//---- PRIVATE METHODS -------------------------------------------------------------------------------
-
-// Try to get the GameUserSettings object from the engine
+// Returneaza un pointer catre obiectul responsabil setarilor aplicatie
 UGameUserSettings* UBpVideoSettingsLib::GetGameUserSettings()
 {
 	if (GEngine != nullptr)
