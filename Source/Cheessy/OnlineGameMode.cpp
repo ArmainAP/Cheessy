@@ -30,6 +30,7 @@ void AOnlineGameMode::PostLogin(APlayerController * NewPlayer)
 		MultiPlayer = true;
 }
 
+//Functia este apelata dupa deconectarea fiecarui jucator
 void AOnlineGameMode::Logout(AController * ExitPlayer)
 {
 	Super::Logout(ExitPlayer);
@@ -46,7 +47,7 @@ void AOnlineGameMode::Logout(AController * ExitPlayer)
 		}
 }
 
-//Replica schimbarea randului intre jucatori catre fiecare client
+//Aplica schimbarea randului intre jucatori catre fiecare client
 void AOnlineGameMode::BroadcastTurn_Implementation(const int& LastTurn)
 {
 	if (LastTurn != 2)

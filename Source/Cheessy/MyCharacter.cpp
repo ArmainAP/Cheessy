@@ -165,6 +165,7 @@ void AMyCharacter::LeftClickUp()
 	LeftMousePressed = false;
 }
 
+//Functie apelata dupa apasarea dubla a click stanga mouse
 void AMyCharacter::LeftDoubleClick()
 {
 	LeftMousePressed = false;

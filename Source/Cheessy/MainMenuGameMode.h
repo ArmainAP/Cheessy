@@ -59,33 +59,30 @@ public:
 	UFUNCTION(BlueprintPure, Category = "IP")
 		FString LocalIP();
 
-	//Realizeaza o cerere HTTP catre http://api.ipify.org/
-	UFUNCTION(BlueprintCallable, Category = "IP")
-		bool ExternalIP_SentRequest();
-
-	//Aceasta functie returneaza IP-ul external si poate realiza apelul altor functii in Visual Scripting
-	UFUNCTION(BlueprintImplementableEvent, Category = "IP", meta = (DisplayName = "ExternalIP ~ Data Received!"))
-		void ExternalIP_DataReceived(const FString& YourIP);
-
-	//Returneaza adresa IP externala/publica indicata de http://api.ipify.org/
-	void HTTPOnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-
+	//Componentul care mentine conexiunea cu serviciile GameSparks
 	UPROPERTY(VisibleAnywhere)
 		UGameSparksComponent* GameSparksComponent;
 
+	//Indica daca serviciile GameSparks au fost initializate
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		bool gsavailable;
 
+	//Username-ul utilizatorului
 	static FString displayname;
+	//Rank-ul utilizatorului
 	static int Elo;
 
+	//Indica starea ping-ului catre instanta de Windows Server 2012 de pe AWS Ec2
 	FIcmpEchoResultDelegate PingResult;
 
+	//Trimite un ping la instanta de Windows Server 2012 de pe AWS Ec2
 	UFUNCTION(BlueprintCallable)
-		void CheckIfServerOnline(FString ServerPublicIP, FString ServerPort);
+		void PingAWS(FString ServerPublicIP, FString ServerPort);
 
-	void OnServerCheckFinished(FIcmpEchoResult Result);
+	//Raspunsul din partea instantei de Windows Server 2012 de pe AWS Ec2
+	void PingAWSResponse(FIcmpEchoResult Result);
 
+	//Afiseaza un mesaj potrivit dupa raspunul indicat de PingResult
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FString PingStatus = "Ping";
 };

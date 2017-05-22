@@ -14,15 +14,19 @@ class CHEESSY_API ULoginUserWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	//Email-ul introdus in text box
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Login Screen")
 		FString username;
 
+	//Parola introdusa in text box
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Login Screen")
 		FString password;
 
+	//Numele introdus in text box
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Login Screen")
 		FString displayname;
 
+	//Rank-ul jucatorului
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Login Screen")
 		int Elo;
 
@@ -38,6 +42,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Login Screen")
 		void OnlineClicked();
 
+	//Apeleaza functia de schimbare a numelui din AMainMenuGameMode
 	UFUNCTION(BlueprintCallable, Category = "Login Screen")
 		void ChangeDisplayname();
 };

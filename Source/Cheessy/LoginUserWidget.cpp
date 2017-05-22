@@ -27,6 +27,7 @@ void ULoginUserWidget::OnlineClicked()
 	Elo = AMainMenuGameMode::Elo;
 }
 
+//Apeleaza functia de schimbare a numelui din AMainMenuGameMode
 void ULoginUserWidget::ChangeDisplayname()
 {
 	AMainMenuGameMode* GM = Cast<AMainMenuGameMode>(GetWorld()->GetAuthGameMode());

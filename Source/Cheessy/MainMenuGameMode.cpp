@@ -106,6 +106,7 @@ void AMainMenuGameMode::AccountDetailsRequest_Response(GameSparks::Core::GS & gs
 	}
 }
 
+//Functia realizeaza o cerere de schimbare a numelui jucatorului pe platforma GameSparks
 void AMainMenuGameMode::ChangeDisplayName(FString DisplayName)
 {
 	if (DisplayName.IsEmpty())
@@ -118,6 +119,7 @@ void AMainMenuGameMode::ChangeDisplayName(FString DisplayName)
 	req.Send(ChangeUserDetailRequest_Response);
 }
 
+//Functia este apelata dupa cererea de schimbare a numelui jucatorului si indica daca numele a fost schimbat
 void AMainMenuGameMode::ChangeUserDetailRequest_Response(GameSparks::Core::GS & gs, const GameSparks::Api::Responses::ChangeUserDetailsResponse & resp)
 {
 	/*if (UGameSparksModule::GetModulePtr()->IsInitialized() && !resp.GetHasErrors())
@@ -138,44 +140,16 @@ FString AMainMenuGameMode::LocalIP()
 	return LocalAddress->ToString(false);
 }
 
-//Realizeaza o cerere HTTP catre http://api.ipify.org/
-bool AMainMenuGameMode::ExternalIP_SentRequest()
+//Trimite un ping la instanta de Windows Server 2012 de pe AWS Ec2
+void AMainMenuGameMode::PingAWS(FString ServerPublicIP, FString ServerPort)
 {
-	FHttpModule* Http = &FHttpModule::Get();
-
-	if(!Http || !Http->IsHttpEnabled())
-		return false;
-
-	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
-	Request->SetVerb("GET");
-	Request->SetURL(FString("http://api.ipify.org/"));
-	Request->SetHeader("User-Agent", "Cheessy");
-	Request->SetHeader("Content-Type", "text/html");
-
-	Request->OnProcessRequestComplete().BindUObject(this, &AMainMenuGameMode::HTTPOnResponseReceived);
-	if (!Request->ProcessRequest())
-		return false;
-	return true;
-}
-
-//Returneaza adresa IP externala/publica indicata de http://api.ipify.org/
-void AMainMenuGameMode::HTTPOnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-{
-	if (bWasSuccessful)
-		this->ExternalIP_DataReceived(Response->GetContentAsString());
-	else
-		this->ExternalIP_DataReceived(FString("HTTPOnResponseReceived >>> Connection Error"));
-}
-
-void AMainMenuGameMode::CheckIfServerOnline(FString ServerPublicIP, FString ServerPort)
-{
-	PingResult.BindUObject(this, &AMainMenuGameMode::OnServerCheckFinished);
+	PingResult.BindUObject(this, &AMainMenuGameMode::PingAWSResponse);
 	const FString Address = ServerPublicIP + ":" + ServerPort;
-	GEngine->AddOnScreenDebugMessage(-1, 50.0f, FColor::MakeRandomColor(), Address);
 	FUDPPing::UDPEcho(Address, 5.f, PingResult);
 }
 
-void AMainMenuGameMode::OnServerCheckFinished(FIcmpEchoResult Result)
+//Raspunsul din partea instantei de Windows Server 2012 de pe AWS Ec2
+void AMainMenuGameMode::PingAWSResponse(FIcmpEchoResult Result)
 {
 	PingResult.Unbind();
 	PingStatus = "PingFailed";
