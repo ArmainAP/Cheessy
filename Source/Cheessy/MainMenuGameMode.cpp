@@ -22,7 +22,7 @@ void AMainMenuGameMode::BeginPlay()
 	{
 		GameSparksComponent->OnGameSparksAvailableDelegate.AddDynamic(this, &AMainMenuGameMode::OnGameSparksAvailable);
 		GameSparksComponent->Disconnect();
-		GameSparksComponent->Connect("C309664r41x6", "xsFXAlNATB1Z9faoVPrwoDv2yos1LyyZ");
+		GameSparksComponent->Connect("GameSparks API Key", "GameSparks API Secret");
 	}
 }
 
